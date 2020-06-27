@@ -1,5 +1,6 @@
 package it.polito.tdp.PremierLeague.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +48,33 @@ public class Model {
 			}
 
 		}
+	}
 
-		System.out.println(this.graph.vertexSet());
-		System.out.println(this.graph.edgeSet());
+	public Player getTopPlayer() {
+		if (this.graph == null) {
+			return null;
+		}
+		Player best = null;
+		Integer bestDeg = 0;
+		for (Player p : this.graph.vertexSet()) {
+			if (this.graph.outDegreeOf(p) > bestDeg) {
+				bestDeg = this.graph.outDegreeOf(p);
+				best = p;
+			}
+		}
+		return best;
+	}
+
+	public List<PlayerMinutes> getBattuti(Player best) {
+		List<PlayerMinutes> pm = new ArrayList<>();
+
+		for (DefaultWeightedEdge e : this.graph.outgoingEdgesOf(best)) {
+			pm.add(new PlayerMinutes(this.graph.getEdgeTarget(e), this.graph.getEdgeWeight(e)));
+		}
+
+		pm.sort(null);
+
+		return pm;
 	}
 
 }

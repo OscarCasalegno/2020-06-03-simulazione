@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.PremierLeague.model.Model;
+import it.polito.tdp.PremierLeague.model.Player;
+import it.polito.tdp.PremierLeague.model.PlayerMinutes;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -68,6 +70,21 @@ public class FXMLController {
 
 	@FXML
 	void doTopPlayer(ActionEvent event) {
+		this.txtResult.clear();
+
+		Player best = this.model.getTopPlayer();
+
+		if (best == null) {
+			this.txtResult.appendText("Creare il grafo");
+			return;
+		}
+
+		this.txtResult.appendText("Miglior giocatore: " + best + "\n\n");
+
+		for (PlayerMinutes pm : this.model.getBattuti(best)) {
+			this.txtResult.appendText(
+					String.format("Minuti per cui ha battuto %s : %d\n", pm.getPlayer(), pm.getMinutes().intValue()));
+		}
 
 	}
 
