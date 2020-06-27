@@ -88,7 +88,7 @@ public class FXMLController {
 			return;
 		}
 
-		this.txtResult.appendText("Grado do titolarità: " + this.model.getTitolarita());
+		this.txtResult.appendText("Grado di titolarità: " + this.model.getTitolarita());
 		this.txtResult.appendText("\n\nGiocatori: \n");
 
 		for (Player p : dreamTeam) {

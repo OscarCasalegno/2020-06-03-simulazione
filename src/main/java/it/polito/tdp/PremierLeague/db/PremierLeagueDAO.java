@@ -90,7 +90,7 @@ public class PremierLeagueDAO {
 	public static List<Conn> getConn() {
 		String sql = "select distinct a1.PlayerID AS id1, a2.playerID AS id2, (sum(a1.TimePlayed) - sum(a2.TimePlayed)) AS diff "
 				+ "FROM actions AS a1, actions AS a2 "
-				+ "WHERE a1.PlayerID<a2.PlayerID AND a1.`Starts`=1 AND a2.`Starts`=1 AND a1.MatchID=a2.MatchID  "
+				+ "WHERE a1.PlayerID<a2.PlayerID AND a1.`Starts`=1 AND a2.`Starts`=1 AND a1.MatchID=a2.MatchID and a1.TeamID<>a2.TeamID "
 				+ "group BY id1, id2";
 		List<Conn> result = new ArrayList<Conn>();
 		Connection conn = DBConnect.getConnection();
