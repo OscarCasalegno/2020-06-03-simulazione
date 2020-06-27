@@ -6,6 +6,7 @@ package it.polito.tdp.PremierLeague;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import it.polito.tdp.PremierLeague.model.Model;
 import it.polito.tdp.PremierLeague.model.Player;
@@ -65,6 +66,34 @@ public class FXMLController {
 
 	@FXML
 	void doDreamTeam(ActionEvent event) {
+		this.txtResult.clear();
+
+		Integer k;
+		try {
+			k = Integer.parseInt(this.txtK.getText());
+		} catch (NumberFormatException e) {
+			this.txtResult.appendText("Inserire un numero valido");
+			return;
+		}
+
+		if (k < 0) {
+			this.txtResult.appendText("Inserire un numero valido");
+			return;
+		}
+
+		Set<Player> dreamTeam = this.model.generaDreamTeam(k);
+
+		if (dreamTeam == null) {
+			this.txtResult.appendText("Creare il grafo");
+			return;
+		}
+
+		this.txtResult.appendText("Grado do titolarità: " + this.model.getTitolarita());
+		this.txtResult.appendText("\n\nGiocatori: \n");
+
+		for (Player p : dreamTeam) {
+			this.txtResult.appendText(p + "\n");
+		}
 
 	}
 

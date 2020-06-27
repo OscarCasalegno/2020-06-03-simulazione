@@ -2,8 +2,10 @@ package it.polito.tdp.PremierLeague.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
@@ -17,6 +19,8 @@ public class Model {
 
 	Graph<Player, DefaultWeightedEdge> graph;
 	Map<Integer, Player> idPlayers;
+	Set<Player> dream;
+	Integer titolarita;
 
 	public void creaGrafo(Double goals) {
 		this.graph = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
@@ -75,6 +79,65 @@ public class Model {
 		pm.sort(null);
 
 		return pm;
+	}
+
+	public Set<Player> generaDreamTeam(Integer k) {
+		dream = new HashSet<>();
+		titolarita = 0;
+
+		Set<Player> esclusi = new HashSet<>();
+		Set<Player> parziale = new HashSet<>();
+
+		this.cerca(parziale, esclusi, 0, k);
+
+		return dream;
+
+	}
+
+	private void cerca(Set<Player> parziale, Set<Player> esclusi, Integer livello, Integer k) {
+
+		if (parziale.size() == k) {
+			Integer tito = this.calcolaTitolarita(parziale);
+
+			if (tito > this.titolarita) {
+				this.dream = new HashSet<>(parziale);
+				this.titolarita = tito;
+			}
+
+		}
+
+		for (Player p : this.graph.vertexSet()) {
+			if (!parziale.contains(p) && !esclusi.contains(p)) {
+				parziale.add(p);
+				for (DefaultWeightedEdge e : this.graph.outgoingEdgesOf(p)) {
+					esclusi.add(this.graph.getEdgeTarget(e));
+				}
+				this.cerca(parziale, esclusi, livello + 1, k);
+				parziale.remove(p);
+				for (DefaultWeightedEdge e : this.graph.outgoingEdgesOf(p)) {
+					esclusi.remove(this.graph.getEdgeTarget(e));
+				}
+			}
+		}
+	}
+
+	private Integer calcolaTitolarita(Set<Player> parziale) {
+		Double somma = 0.0;
+
+		for (Player p : parziale) {
+			for (DefaultWeightedEdge e : this.graph.outgoingEdgesOf(p)) {
+				somma += this.graph.getEdgeWeight(e);
+			}
+			for (DefaultWeightedEdge e : this.graph.incomingEdgesOf(p)) {
+				somma -= this.graph.getEdgeWeight(e);
+			}
+		}
+
+		return somma.intValue();
+	}
+
+	public Integer getTitolarita() {
+		return this.titolarita;
 	}
 
 }
